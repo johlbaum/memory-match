@@ -1,4 +1,4 @@
-const cardList = [
+export const cardList = [
   {
     id: 1,
     title: "ace",
@@ -20,5 +20,3 @@ const cardList = [
     imgUrl: "",
   },
 ];
-
-export default cardList;

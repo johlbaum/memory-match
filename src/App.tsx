@@ -1,7 +1,11 @@
-import React from "react";
+import DisplayCards from "./components/Main/DisplayCards";
 
 function App() {
-  return <div className="App"></div>;
+  return (
+    <div className="App">
+      <DisplayCards />
+    </div>
+  );
 }
 
 export default App;
