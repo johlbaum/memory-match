@@ -1,9 +1,9 @@
-import DisplayCards from "./components/Main/DisplayCards";
+import CardList from "./components/Main/CardList";
 
 function App() {
   return (
     <div className="App">
-      <DisplayCards />
+      <CardList />
     </div>
   );
 }

@@ -1,4 +1,7 @@
+import { Dispatch, SetStateAction } from "react";
+
 export interface CardProps {
   title: string;
-  imgUrl: string;
+  img: string;
+  setCardsSelection: Dispatch<SetStateAction<string[]>>;
 }
