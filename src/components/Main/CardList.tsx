@@ -33,7 +33,7 @@ const CardList = () => {
         <Card
           key={`${card.id}-${index}`}
           title={card.title}
-          img={card.img}
+          img={card.imgFront}
           setCardsSelection={setCardsSelection}
         />
       ))}
