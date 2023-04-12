@@ -1,39 +1,38 @@
 import { useState, useEffect } from "react";
-import { cardList } from "../../data/cardList";
+import cardList from "../../data/cardList";
 import Card from "./Card";
 import "../../styles/cardList.css";
 
+interface CardSelection {
+  id: number;
+  cardTitle: string;
+}
+
 const CardList = () => {
-  const duplicateCardList = cardList.concat(cardList);
-  const [cardsSelection, setCardsSelection] = useState<string[]>([]);
-  const [newArray, setNewArray] = useState(duplicateCardList.slice());
+  const [cards, setCards] = useState(cardList());
+  const [cardsSelection, setCardsSelection] = useState<CardSelection[]>([]);
 
   useEffect(() => {
-    if (cardsSelection.length === 2) {
-      if (cardsSelection[0].includes(cardsSelection[1])) {
-        const cardNameToDelete = newArray.find(
-          (obj) => obj.title === cardsSelection[0]
-        );
-        if (cardNameToDelete) {
-          const filteredArray = newArray.filter(
-            (value) => value !== cardNameToDelete
-          );
-          setNewArray(filteredArray);
-        }
-        setCardsSelection([]);
-      } else {
-        setCardsSelection([]);
+    console.log(cardsSelection);
+    if (cardsSelection.length > 0 && cardsSelection.length < 2) {
+      if (
+        cardsSelection[0]?.id === cardsSelection[1]?.id &&
+        cardsSelection[0]?.cardTitle === cardsSelection[1]?.cardTitle
+      ) {
+        console.log("carte identiques");
       }
     }
-  }, [cardsSelection, newArray]);
+  }, [cardsSelection]);
 
   return (
     <div className="card-list">
-      {newArray.map((card, index) => (
+      {cards.map((card, index) => (
         <Card
-          key={`${card.id}-${index}`}
+          key={card.id}
+          id={card.id}
           title={card.title}
-          img={card.imgFront}
+          imgFront={card.imgFront}
+          imgBack={card.imgBack}
           setCardsSelection={setCardsSelection}
         />
       ))}

@@ -3,30 +3,47 @@ import king from "../assets/king.png";
 import queen from "../assets/queen.png";
 import jack from "../assets/jack.png";
 import backImg from "../assets/back.png";
+interface Card {
+  title: string;
+  imgFront: string;
+  imgBack: string;
+  [key: string]: any;
+}
 
-export const cardList = [
+const cardListData: Card[] = [
   {
-    id: 1,
     title: "ace",
     imgFront: ace,
     imgBack: backImg,
   },
   {
-    id: 2,
     title: "king",
     imgFront: king,
     imgBack: backImg,
   },
   {
-    id: 3,
     title: "queen",
     imgFront: queen,
     imgBack: backImg,
   },
   {
-    id: 4,
     title: "jack",
     imgFront: jack,
     imgBack: backImg,
   },
 ];
+
+const cardList = () => {
+  const shuffledCards = [...cardListData, ...cardListData].sort(
+    () => Math.random() - 0.5
+  );
+  const cardsWithId = shuffledCards.map((curr, i) => {
+    return {
+      ...curr,
+      id: i + 1,
+    };
+  });
+  return cardsWithId;
+};
+
+export default cardList;

@@ -1,23 +1,50 @@
-//import { CardProps } from "../../types/types";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState, MouseEventHandler } from "react";
 
 import "../../styles/card.css";
 
+interface CardSelection {
+  id: number;
+  cardTitle: string;
+}
 interface CardProps {
+  id: number;
   title: string;
-  img: string;
-  setCardsSelection: Dispatch<SetStateAction<string[]>>;
+  imgFront: string;
+  imgBack: string;
+  setCardsSelection: Dispatch<SetStateAction<CardSelection[]>>;
 }
 
 const Card = (props: CardProps) => {
-  const onCardClick = () => {
-    props.setCardsSelection((prevArray) => [...prevArray, props.title]);
+  const [activeReturnCardEffect, setActiveReturnCardEffect] = useState(false);
+
+  const handleImageClick: MouseEventHandler<HTMLDivElement> = () => {
+    setActiveReturnCardEffect(!activeReturnCardEffect);
+    props.setCardsSelection((prevArray) => [
+      ...prevArray,
+      { id: props.id, cardTitle: props.title },
+    ]);
   };
 
   return (
-    <div className="card" onClick={() => onCardClick()}>
-      <img src={props.img} alt={props.title} />
-      <h3>{props.title}</h3>
+    <div className="wrapper" onClick={handleImageClick}>
+      <img
+        src={props.imgFront}
+        alt={props.title}
+        // style={{
+        //   transform: activeReturnCardEffect
+        //     ? "rotateY(0deg)"
+        //     : "rotateY(180deg)",
+        // }}
+      />
+      <img
+        src={props.imgBack}
+        alt={props.title}
+        // style={{
+        //   transform: activeReturnCardEffect
+        //     ? "rotateY(180deg)"
+        //     : "rotateY(0deg)",
+        // }}
+      />
     </div>
   );
 };
