@@ -1,0 +1,22 @@
+.wrapper {
+  position: relative;
+  perspective: 1000px; /* Ajouter une perspective pour l'effet 3D */
+  width: 200px; /* Modifier la largeur en fonction de vos besoins */
+  height: 200px; /* Modifier la hauteur en fonction de vos besoins */
+  margin: 30px;
+}
+
+.wrapper img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden; /* Masquer la face arrière de l'image pour l'effet de retournement */
+  cursor: pointer;
+  transition: transform 0.5s ease; /* Ajouter une transition pour l'effet de retournement */
+}
+
+.wrapper img:last-child {
+  transform: rotateY(180deg); /* Définir la rotation initiale à 180 deg pour cacher l'image de derrière */
+}
