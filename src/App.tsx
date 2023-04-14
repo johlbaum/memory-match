@@ -1,10 +1,13 @@
-import CardList from "./components/Main/CardList";
+import { Route, Routes } from "react-router-dom";
+import HomePage from "./pages/Home";
+import Play from "./pages/Play";
 
 function App() {
   return (
-    <div className="App">
-      <CardList />
-    </div>
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/play" element={<Play />} />
+    </Routes>
   );
 }
 
