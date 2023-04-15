@@ -1,4 +1,6 @@
 import LevelButtonsList from "../components/Main/LevelButtonsList";
+import PlayButon from "../components/Main/PlayButon";
+
 import "../styles/home.css";
 
 function Home() {
@@ -6,7 +8,7 @@ function Home() {
     <div className="home">
       <h1>Memory match</h1>
       <LevelButtonsList />
-      <p>Jouer !</p>
+      <PlayButon />
     </div>
   );
 }

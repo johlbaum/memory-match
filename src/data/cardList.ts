@@ -34,9 +34,19 @@ const cardListData: Card[] = [
 ];
 
 const cardList = () => {
-  const shuffledCards = [...cardListData, ...cardListData].sort(
-    () => Math.random() - 0.5
-  );
+  const duplicateFactor = 4;
+
+  //Tableau d'objets de type Card où chaque élément est un objet qui a les propriétés title, imgFront, et imgBack de type string
+  const duplicateCardList: Card[] = [];
+
+  cardListData.forEach((item) => {
+    for (let i = 0; i < duplicateFactor; i++) {
+      const newItem = { ...item };
+      duplicateCardList.push(newItem);
+    }
+  });
+
+  const shuffledCards = duplicateCardList.sort(() => Math.random() - 0.5);
   const cardsWithId = shuffledCards.map((curr, i) => {
     return {
       ...curr,
