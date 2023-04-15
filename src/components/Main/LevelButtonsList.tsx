@@ -1,4 +1,6 @@
 import { useState } from "react";
+import LevelButton from "./LevelButton";
+
 import "../../styles/lvlButton.css";
 
 interface ButtonValue {
@@ -38,18 +40,15 @@ function LevelButtonsList() {
   };
 
   return (
-    <div>
+    <div className="lvl-buttons">
       {buttonValues.map((currentButton) => {
         return (
-          <p
-            className={
-              currentButton.isSelected ? "lvl-button-is-selected" : "lvl-button"
-            }
-            onClick={() => changeBackground(currentButton)}
+          <LevelButton
             key={currentButton.lvl}
-          >
-            {currentButton.lvl}
-          </p>
+            isSelected={currentButton.isSelected}
+            changeBackground={() => changeBackground(currentButton)}
+            level={currentButton.lvl}
+          />
         );
       })}
     </div>

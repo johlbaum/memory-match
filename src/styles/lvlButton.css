@@ -1,10 +1,17 @@
+.lvl-buttons {
+  display: flex;
+  flex-direction: column;
+}
+
 .lvl-button {
   padding: 10px 15px;
   border: 1px solid #8080807a;
   background-color: #0d738c;
   color: #fff;
   cursor: pointer;
-  margin: 5px 0;
+  margin: 10px 0;
+  text-align: center;
+  text-transform: uppercase;
 }
 
 .lvl-button-is-selected {
