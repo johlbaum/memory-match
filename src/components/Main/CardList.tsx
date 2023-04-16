@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { LevelContext } from "../../utils/context/LevelContext";
 import cardList from "../../data/cardList";
 import Card from "./Card";
 import "../../styles/cardList.css";
@@ -9,7 +10,8 @@ interface CardSelection {
 }
 
 const CardList = () => {
-  const [cards, setCards] = useState(cardList());
+  const { level } = useContext(LevelContext);
+  const [cards, setCards] = useState(cardList(level));
   const [cardsSelection, setCardsSelection] = useState<CardSelection[]>([]);
 
   useEffect(() => {

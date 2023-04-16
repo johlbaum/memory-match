@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import LevelButton from "./LevelButton";
+import { LevelContext } from "../../utils/context/LevelContext";
 
 import "../../styles/lvlButton.css";
 
@@ -26,7 +27,10 @@ const ButtonValues = [
 function LevelButtonsList() {
   const [buttonValues, setButtonValues] = useState(ButtonValues);
 
+  const { setLevel } = useContext(LevelContext);
+
   const changeBackground = (currentButton: ButtonValue): void => {
+    setLevel(currentButton.lvl);
     setButtonValues((prevButtonValues) => {
       return prevButtonValues.map((button) => {
         if (button === currentButton) {

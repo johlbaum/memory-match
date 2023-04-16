@@ -5,7 +5,10 @@ interface LevelContextValue {
   setLevel: (level: string) => void;
 }
 
-export const LevelContext = createContext<LevelContextValue | null>(null);
+export const LevelContext = createContext<LevelContextValue>({
+  level: "",
+  setLevel: () => {},
+});
 
 interface LevelProviderProps {
   children: React.ReactNode;
