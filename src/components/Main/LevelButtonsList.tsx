@@ -28,14 +28,13 @@ function LevelButtonsList() {
 
   const changeBackground = (currentButton: ButtonValue): void => {
     setButtonValues((prevButtonValues) => {
-      const updatedButtonValues = prevButtonValues.map((button) => {
+      return prevButtonValues.map((button) => {
         if (button === currentButton) {
           return { ...button, isSelected: true };
         } else {
           return { ...button, isSelected: false };
         }
       });
-      return updatedButtonValues;
     });
   };
 
