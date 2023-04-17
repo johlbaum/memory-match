@@ -3,10 +3,16 @@ import { LevelContext } from "../../utils/context/LevelContext";
 import cardList from "../../data/cardList";
 import Card from "./Card";
 import "../../styles/cardList.css";
-
 interface CardSelection {
   id: number;
   cardTitle: string;
+}
+interface Cards {
+  id: number;
+  title: string;
+  imgFront: string;
+  imgBack: string;
+  isFound: boolean;
 }
 
 const CardList = () => {
@@ -17,27 +23,32 @@ const CardList = () => {
   useEffect(() => {
     const [card1, card2] = cardsSelection;
     if (cardsSelection.length === 2 && card1.cardTitle === card2.cardTitle) {
-      const timeoutId: NodeJS.Timeout = setTimeout(() => {
-        setCards((prevCards) => {
-          const arrayWithoutDuplicates = prevCards.filter((curr) => {
-            return curr.id !== card1.id && curr.id !== card2.id;
-          });
-          return arrayWithoutDuplicates;
+      setCards((prev: Cards[]) => {
+        return prev.map((curr) => {
+          if (
+            curr.title === cardsSelection[0].cardTitle &&
+            curr.title === cardsSelection[1].cardTitle
+          ) {
+            return { ...curr, isFound: true };
+          }
+          return curr;
         });
-        setCardsSelection([]);
-      }, 2000);
-      return () => {
-        clearTimeout(timeoutId);
-      };
+      });
+
+      setCardsSelection([]);
     }
-    if (cardsSelection.length === 2) {
-      const timeoutId: NodeJS.Timeout = setTimeout(() => {
+  }, [cardsSelection]);
+
+  useEffect(() => {
+    const timeoutId: NodeJS.Timeout = setTimeout(() => {
+      if (cardsSelection.length === 2) {
         setCardsSelection([]);
-      }, 2500);
-      return () => {
-        clearTimeout(timeoutId);
-      };
-    }
+      }
+    }, 2500);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, [cardsSelection]);
 
   console.log(cardsSelection);
@@ -53,6 +64,7 @@ const CardList = () => {
           imgBack={card.imgBack}
           setCardsSelection={setCardsSelection}
           cardsSelection={cardsSelection}
+          isFound={card.isFound}
         />
       ))}
     </div>

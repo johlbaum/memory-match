@@ -8,6 +8,7 @@ interface Card {
   title: string;
   imgFront: string;
   imgBack: string;
+  isFound: boolean;
   [key: string]: any;
 }
 
@@ -16,21 +17,25 @@ const cardListData: Card[] = [
     title: "ace",
     imgFront: ace,
     imgBack: backImg,
+    isFound: false,
   },
   {
     title: "king",
     imgFront: king,
     imgBack: backImg,
+    isFound: false,
   },
   {
     title: "queen",
     imgFront: queen,
     imgBack: backImg,
+    isFound: false,
   },
   {
     title: "jack",
     imgFront: jack,
     imgBack: backImg,
+    isFound: false,
   },
 ];
 
