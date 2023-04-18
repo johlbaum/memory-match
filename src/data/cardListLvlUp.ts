@@ -77,7 +77,16 @@ const gameLevelSelection = (level: number): GameLevel[] => {
     levelSelected[0].numberOfCards
   );
 
-  return singleCardsArray;
+  const duplicateCardList: Card[] = [];
+
+  singleCardsArray.forEach((item) => {
+    for (let i = 0; i < levelSelected[0].numberOfCards; i++) {
+      const newItem = { ...item };
+      duplicateCardList.push(newItem);
+    }
+  });
+  const shuffledCards = duplicateCardList.sort(() => Math.random() - 0.5);
+  return shuffledCards;
 };
 
 export default gameLevelSelection;
