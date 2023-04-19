@@ -1,23 +1,30 @@
 import { useState, useEffect, useContext } from "react";
-import { LevelContext } from "../../utils/context/LevelContext";
-import cardList from "../../data/cardList";
+//import { LevelContext } from "../../utils/context/LevelContext";
+//import cardList from "../../data/cardList";
 import Card from "./Card";
 import "../../styles/cardList.css";
 interface CardSelection {
   id: number;
   cardTitle: string;
 }
+
 interface Cards {
-  id: number;
+  [key: string]: any;
   title: string;
   imgFront: string;
   imgBack: string;
   isFound: boolean;
 }
 
-const CardList = () => {
-  const { level } = useContext(LevelContext);
-  const [cards, setCards] = useState(cardList(level));
+interface CardListProps {
+  data: Cards[];
+}
+
+const CardList: React.FunctionComponent<CardListProps> = ({ data }) => {
+  //const { level } = useContext(LevelContext);
+  // const [cards, setCards] = useState(cardList(level));
+  const [cards, setCards] = useState(data);
+
   const [cardsSelection, setCardsSelection] = useState<CardSelection[]>([]);
 
   useEffect(() => {

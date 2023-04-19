@@ -68,25 +68,31 @@ const gameLevel: GameLevel[] = [
   },
 ];
 
-const gameLevelSelection = (level: number): GameLevel[] => {
-  const levelSelected = gameLevel.filter((curr) => {
+const getDataByLevel = (level: number) => {
+  const levelSelectedInformation = gameLevel.filter((curr) => {
     return curr.level === level;
   });
-  const singleCardsArray = cardListData.slice(
+  const timer = levelSelectedInformation[0].timer;
+  const singleCardList = cardListData.slice(
     0,
-    levelSelected[0].numberOfCards
+    levelSelectedInformation[0].numberOfCards
   );
 
   const duplicateCardList: Card[] = [];
 
-  singleCardsArray.forEach((item) => {
-    for (let i = 0; i < levelSelected[0].numberOfCards; i++) {
-      const newItem = { ...item };
-      duplicateCardList.push(newItem);
+  singleCardList.forEach((card) => {
+    for (let i = 0; i < 2; i++) {
+      const newCard = { ...card };
+      duplicateCardList.push(newCard);
     }
   });
-  const shuffledCards = duplicateCardList.sort(() => Math.random() - 0.5);
-  return shuffledCards;
+
+  const shuffledCardList = duplicateCardList.sort(() => Math.random() - 0.5);
+
+  return {
+    data: shuffledCardList,
+    timer: timer,
+  };
 };
 
-export default gameLevelSelection;
+export default getDataByLevel;

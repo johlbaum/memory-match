@@ -2,10 +2,14 @@ import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 
 interface CounterProps {
   setOpenModal: Dispatch<SetStateAction<boolean>>;
+  timer: number;
 }
 
-const Counter: React.FunctionComponent<CounterProps> = ({ setOpenModal }) => {
-  const [startingValue, setStartingValue] = useState<number>(5);
+const Counter: React.FunctionComponent<CounterProps> = ({
+  setOpenModal,
+  timer,
+}) => {
+  const [startingValue, setStartingValue] = useState<number>(timer);
 
   useEffect(() => {
     const timeoutId: NodeJS.Timeout = setTimeout(() => {
