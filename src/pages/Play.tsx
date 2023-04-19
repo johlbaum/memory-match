@@ -7,8 +7,9 @@ import CardListLvlUp from "../data/cardListLvlUp";
 
 function Play() {
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [level, setLevel] = useState<number>(1);
 
-  const cardListLvlUp = CardListLvlUp(3);
+  const cardListLvlUp = CardListLvlUp(level);
 
   return (
     <>
@@ -16,8 +17,10 @@ function Play() {
       <CardList data={cardListLvlUp.data} />
       {openModal && (
         <Modal>
-          <h2>Titre de la fenêtre modale</h2>
-          <p>Contenu de la fenêtre modale</p>
+          <h2>Bravo, tu as trouvé toutes les paires !</h2>
+          <button onClick={() => setLevel((prevLevel) => prevLevel + 1)}>
+            Jouer au niveau suivant
+          </button>
         </Modal>
       )}
     </>
