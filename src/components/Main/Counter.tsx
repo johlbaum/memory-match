@@ -4,12 +4,14 @@ interface CounterProps {
   timerStartingValue: number;
   setTimerStartingValue: Dispatch<SetStateAction<number>>;
   setOpenModal: Dispatch<SetStateAction<boolean>>;
+  firstClickOnCard: boolean;
 }
 
 const Counter: React.FunctionComponent<CounterProps> = ({
   setOpenModal,
   timerStartingValue,
   setTimerStartingValue,
+  firstClickOnCard,
 }) => {
   useEffect(() => {
     if (timerStartingValue) {
@@ -18,6 +20,7 @@ const Counter: React.FunctionComponent<CounterProps> = ({
   }, [timerStartingValue]);
 
   useEffect(() => {
+    //if (firstClickOnCard) {
     const timeoutId: NodeJS.Timeout = setTimeout(() => {
       setTimerStartingValue((prev: number) => {
         if (prev > 1) {
@@ -32,6 +35,7 @@ const Counter: React.FunctionComponent<CounterProps> = ({
     return () => {
       clearTimeout(timeoutId);
     };
+    //}
   }, [timerStartingValue]);
 
   return <p>{timerStartingValue}</p>;

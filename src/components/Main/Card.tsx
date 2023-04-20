@@ -19,6 +19,7 @@ interface CardProps {
   isFound: boolean;
   setCardsSelection: Dispatch<SetStateAction<CardSelection[]>>;
   cardsSelection: CardSelection[];
+  setFirstClickOnCard: Dispatch<SetStateAction<boolean>>;
 }
 
 const Card: React.FunctionComponent<CardProps> = ({
@@ -29,10 +30,12 @@ const Card: React.FunctionComponent<CardProps> = ({
   setCardsSelection,
   imgFront,
   imgBack,
+  setFirstClickOnCard,
 }) => {
   const [activeReturnCardEffect, setActiveReturnCardEffect] = useState(false);
 
   const handleImageClick: MouseEventHandler<HTMLDivElement> = () => {
+    setFirstClickOnCard(true);
     if (cardsSelection.length < 2 && isFound !== true) {
       const isAlreadySelected = cardsSelection.some(
         (card) => card.id === id && card.cardTitle === cardTitle

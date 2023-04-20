@@ -26,12 +26,14 @@ interface CardListProps {
   cardList: Cards[];
   setCardList: Dispatch<SetStateAction<Cards[]>>;
   setOpenModal: Dispatch<SetStateAction<boolean>>;
+  setFirstClickOnCard: Dispatch<SetStateAction<boolean>>;
 }
 
 const CardList: React.FunctionComponent<CardListProps> = ({
   cardList,
   setCardList,
   setOpenModal,
+  setFirstClickOnCard,
 }) => {
   const [cardsSelection, setCardsSelection] = useState<CardSelection[]>([]);
 
@@ -81,6 +83,7 @@ const CardList: React.FunctionComponent<CardListProps> = ({
           setCardsSelection={setCardsSelection}
           cardsSelection={cardsSelection}
           isFound={card.isFound}
+          setFirstClickOnCard={setFirstClickOnCard}
         />
       ))}
     </div>
