@@ -63,20 +63,20 @@ const Card: React.FunctionComponent<CardProps> = ({
       <img
         src={imgFront}
         alt={cardTitle}
-        style={{
-          transform: activeReturnCardEffect
-            ? "rotateY(0deg)"
-            : "rotateY(180deg)",
-        }}
+        // style={{
+        //   transform: activeReturnCardEffect
+        //     ? "rotateY(0deg)"
+        //     : "rotateY(180deg)",
+        // }}
       />
       <img
         src={imgBack}
         alt={cardTitle}
-        style={{
-          transform: activeReturnCardEffect
-            ? "rotateY(180deg)"
-            : "rotateY(0deg)",
-        }}
+        // style={{
+        //   transform: activeReturnCardEffect
+        //     ? "rotateY(180deg)"
+        //     : "rotateY(0deg)",
+        // }}
       />
     </div>
   );

@@ -1,4 +1,10 @@
-import { useState, useEffect, useContext } from "react";
+import {
+  useState,
+  useEffect,
+  useContext,
+  Dispatch,
+  SetStateAction,
+} from "react";
 //import { LevelContext } from "../../utils/context/LevelContext";
 //import cardList from "../../data/cardList";
 import Card from "./Card";
@@ -9,7 +15,7 @@ interface CardSelection {
 }
 
 interface Cards {
-  [key: string]: any;
+  id: number;
   title: string;
   imgFront: string;
   imgBack: string;
@@ -17,20 +23,22 @@ interface Cards {
 }
 
 interface CardListProps {
-  data: Cards[];
+  cardList: Cards[];
+  setCardList: Dispatch<SetStateAction<Cards[]>>;
+  setOpenModal: Dispatch<SetStateAction<boolean>>;
 }
 
-const CardList: React.FunctionComponent<CardListProps> = ({ data }) => {
-  //const { level } = useContext(LevelContext);
-  // const [cards, setCards] = useState(cardList(level));
-  const [cards, setCards] = useState(data);
-
+const CardList: React.FunctionComponent<CardListProps> = ({
+  cardList,
+  setCardList,
+  setOpenModal,
+}) => {
   const [cardsSelection, setCardsSelection] = useState<CardSelection[]>([]);
 
   useEffect(() => {
     const [card1, card2] = cardsSelection;
     if (cardsSelection.length === 2 && card1.cardTitle === card2.cardTitle) {
-      setCards((prev: Cards[]) => {
+      setCardList((prev: Cards[]) => {
         return prev.map((curr) => {
           if (
             curr.title === cardsSelection[0].cardTitle &&
@@ -41,8 +49,11 @@ const CardList: React.FunctionComponent<CardListProps> = ({ data }) => {
           return curr;
         });
       });
-
       setCardsSelection([]);
+    }
+    if (cardList && cardList.length) {
+      const allPairsFound = cardList.every((objet) => objet.isFound === true);
+      allPairsFound && setOpenModal(true);
     }
   }, [cardsSelection]);
 
@@ -58,11 +69,9 @@ const CardList: React.FunctionComponent<CardListProps> = ({ data }) => {
     };
   }, [cardsSelection]);
 
-  console.log(cardsSelection);
-
   return (
     <div className="card-list">
-      {cards.map((card) => (
+      {cardList.map((card) => (
         <Card
           key={card.id}
           id={card.id}

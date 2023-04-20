@@ -1,19 +1,25 @@
-import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
+import React, { useEffect, Dispatch, SetStateAction } from "react";
 
 interface CounterProps {
+  timerStartingValue: number;
+  setTimerStartingValue: Dispatch<SetStateAction<number>>;
   setOpenModal: Dispatch<SetStateAction<boolean>>;
-  timer: number;
 }
 
 const Counter: React.FunctionComponent<CounterProps> = ({
   setOpenModal,
-  timer,
+  timerStartingValue,
+  setTimerStartingValue,
 }) => {
-  const [startingValue, setStartingValue] = useState<number>(timer);
+  useEffect(() => {
+    if (timerStartingValue) {
+      setTimerStartingValue(timerStartingValue);
+    }
+  }, [timerStartingValue]);
 
   useEffect(() => {
     const timeoutId: NodeJS.Timeout = setTimeout(() => {
-      setStartingValue((prev: number) => {
+      setTimerStartingValue((prev: number) => {
         if (prev > 1) {
           return prev - 1;
         } else {
@@ -26,11 +32,9 @@ const Counter: React.FunctionComponent<CounterProps> = ({
     return () => {
       clearTimeout(timeoutId);
     };
-  }, [startingValue]);
+  }, [timerStartingValue]);
 
-  console.log(startingValue);
-
-  return <p>{startingValue}</p>;
+  return <p>{timerStartingValue}</p>;
 };
 
 export default Counter;

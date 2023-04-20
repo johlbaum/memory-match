@@ -2,6 +2,10 @@ import ace from "../assets/ace.png";
 import king from "../assets/king.png";
 import queen from "../assets/queen.png";
 import jack from "../assets/jack.png";
+import sixClub from "../assets/six-club.png";
+import forDiamond from "../assets/for-diamond.png";
+import tenDiamond from "../assets/ten-diamond.png";
+import twoClub from "../assets/two-club.png";
 import backImg from "../assets/back.png";
 
 interface Card {
@@ -43,13 +47,37 @@ const cardListData: Card[] = [
     imgBack: backImg,
     isFound: false,
   },
+  {
+    title: "sixClub",
+    imgFront: sixClub,
+    imgBack: backImg,
+    isFound: false,
+  },
+  {
+    title: "forDiamond",
+    imgFront: forDiamond,
+    imgBack: backImg,
+    isFound: false,
+  },
+  {
+    title: "tenDiamond",
+    imgFront: tenDiamond,
+    imgBack: backImg,
+    isFound: false,
+  },
+  {
+    title: "twoClub",
+    imgFront: twoClub,
+    imgBack: backImg,
+    isFound: false,
+  },
 ];
 
 const gameLevel: GameLevel[] = [
   {
     level: 1,
     numberOfCards: 3,
-    timer: 45,
+    timer: 5,
   },
   {
     level: 2,
@@ -65,6 +93,11 @@ const gameLevel: GameLevel[] = [
     level: 4,
     numberOfCards: 6,
     timer: 45,
+  },
+  {
+    level: 5,
+    numberOfCards: 6,
+    timer: 30,
   },
 ];
 
@@ -89,8 +122,15 @@ const getDataByLevel = (level: number) => {
 
   const shuffledCardList = duplicateCardList.sort(() => Math.random() - 0.5);
 
+  const cardsWithId = shuffledCardList.map((curr, i) => {
+    return {
+      ...curr,
+      id: i + 1,
+    };
+  });
+
   return {
-    data: shuffledCardList,
+    data: cardsWithId,
     timer: timer,
   };
 };
