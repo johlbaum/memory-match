@@ -1,15 +1,18 @@
-import {
-  Dispatch,
-  SetStateAction,
-  useState,
-  MouseEventHandler,
-  useEffect,
-} from "react";
+import { Dispatch, SetStateAction, MouseEventHandler } from "react";
 
 import "../../styles/card.css";
 interface CardSelection {
   id: number;
   cardTitle: string;
+}
+
+interface CurrentCard {
+  id: number;
+  title: string;
+  imgFront: string;
+  imgBack: string;
+  isFound: boolean;
+  isSelected: boolean;
 }
 interface CardProps {
   id: number;
@@ -20,6 +23,11 @@ interface CardProps {
   setCardsSelection: Dispatch<SetStateAction<CardSelection[]>>;
   cardsSelection: CardSelection[];
   setFirstClickOnCard: Dispatch<SetStateAction<boolean>>;
+  transitionDurationIsActive: boolean;
+  setTransitionDurationIsActive: Dispatch<SetStateAction<boolean>>;
+  onCardClick: (currentCard: CurrentCard) => void;
+  currentCard: CurrentCard;
+  isSelected: boolean;
 }
 
 const Card: React.FunctionComponent<CardProps> = ({
@@ -31,17 +39,20 @@ const Card: React.FunctionComponent<CardProps> = ({
   imgFront,
   imgBack,
   setFirstClickOnCard,
+  transitionDurationIsActive,
+  setTransitionDurationIsActive,
+  onCardClick,
+  currentCard,
+  isSelected,
 }) => {
-  const [activeReturnCardEffect, setActiveReturnCardEffect] = useState(false);
-
   const handleImageClick: MouseEventHandler<HTMLDivElement> = () => {
-    setFirstClickOnCard(true);
+    setTransitionDurationIsActive(true);
+    onCardClick(currentCard);
     if (cardsSelection.length < 2 && isFound !== true) {
       const isAlreadySelected = cardsSelection.some(
         (card) => card.id === id && card.cardTitle === cardTitle
       );
-      if (!isAlreadySelected && cardsSelection.length < 2) {
-        setActiveReturnCardEffect(true);
+      if (!isAlreadySelected) {
         setCardsSelection([
           ...cardsSelection,
           { id: id, cardTitle: cardTitle },
@@ -50,36 +61,23 @@ const Card: React.FunctionComponent<CardProps> = ({
     }
   };
 
-  useEffect(() => {
-    const timeoutId: NodeJS.Timeout = setTimeout(() => {
-      if (isFound !== true) {
-        setActiveReturnCardEffect(false);
-      }
-    }, 2500);
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [cardsSelection]);
-
   return (
     <div className="wrapper" onClick={handleImageClick}>
       <img
         src={imgFront}
         alt={cardTitle}
-        // style={{
-        //   transform: activeReturnCardEffect
-        //     ? "rotateY(0deg)"
-        //     : "rotateY(180deg)",
-        // }}
+        style={{
+          transform: isSelected ? "rotateY(0deg)" : "rotateY(180deg)",
+          transitionDuration: !transitionDurationIsActive ? "0s" : "0.5s",
+        }}
       />
       <img
         src={imgBack}
         alt={cardTitle}
-        // style={{
-        //   transform: activeReturnCardEffect
-        //     ? "rotateY(180deg)"
-        //     : "rotateY(0deg)",
-        // }}
+        style={{
+          transform: isSelected ? "rotateY(180deg)" : "rotateY(0deg)",
+          transitionDuration: !transitionDurationIsActive ? "0s" : "0.5s",
+        }}
       />
     </div>
   );

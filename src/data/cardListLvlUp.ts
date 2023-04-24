@@ -13,6 +13,7 @@ interface Card {
   imgFront: string;
   imgBack: string;
   isFound: boolean;
+  isSelected: boolean;
   [key: string]: any;
 }
 
@@ -28,48 +29,56 @@ const cardListData: Card[] = [
     imgFront: ace,
     imgBack: backImg,
     isFound: false,
+    isSelected: false,
   },
   {
     title: "king",
     imgFront: king,
     imgBack: backImg,
     isFound: false,
+    isSelected: false,
   },
   {
     title: "queen",
     imgFront: queen,
     imgBack: backImg,
     isFound: false,
+    isSelected: false,
   },
   {
     title: "jack",
     imgFront: jack,
     imgBack: backImg,
     isFound: false,
+    isSelected: false,
   },
   {
     title: "sixClub",
     imgFront: sixClub,
     imgBack: backImg,
     isFound: false,
+    isSelected: false,
   },
   {
     title: "forDiamond",
     imgFront: forDiamond,
     imgBack: backImg,
     isFound: false,
+    isSelected: false,
   },
   {
     title: "tenDiamond",
     imgFront: tenDiamond,
     imgBack: backImg,
     isFound: false,
+    isSelected: false,
   },
   {
     title: "twoClub",
     imgFront: twoClub,
     imgBack: backImg,
     isFound: false,
+    isSelected: false,
   },
 ];
 
@@ -77,7 +86,7 @@ const gameLevel: GameLevel[] = [
   {
     level: 1,
     numberOfCards: 3,
-    timer: 5,
+    timer: 100,
   },
   {
     level: 2,

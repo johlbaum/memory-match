@@ -1,12 +1,4 @@
-import {
-  useState,
-  useEffect,
-  useContext,
-  Dispatch,
-  SetStateAction,
-} from "react";
-//import { LevelContext } from "../../utils/context/LevelContext";
-//import cardList from "../../data/cardList";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import Card from "./Card";
 import "../../styles/cardList.css";
 interface CardSelection {
@@ -20,6 +12,7 @@ interface Cards {
   imgFront: string;
   imgBack: string;
   isFound: boolean;
+  isSelected: boolean;
 }
 
 interface CardListProps {
@@ -27,6 +20,8 @@ interface CardListProps {
   setCardList: Dispatch<SetStateAction<Cards[]>>;
   setOpenModal: Dispatch<SetStateAction<boolean>>;
   setFirstClickOnCard: Dispatch<SetStateAction<boolean>>;
+  setTransitionDurationIsActive: Dispatch<SetStateAction<boolean>>;
+  transitionDurationIsActive: boolean;
 }
 
 const CardList: React.FunctionComponent<CardListProps> = ({
@@ -34,8 +29,20 @@ const CardList: React.FunctionComponent<CardListProps> = ({
   setCardList,
   setOpenModal,
   setFirstClickOnCard,
+  transitionDurationIsActive,
+  setTransitionDurationIsActive,
 }) => {
   const [cardsSelection, setCardsSelection] = useState<CardSelection[]>([]);
+
+  const onCardClick = (currentCard: Cards) => {
+    const selectedListCard = cardList.map((current) => {
+      if (currentCard.id === current.id && cardsSelection.length < 2) {
+        return { ...currentCard, isSelected: true };
+      }
+      return current;
+    });
+    setCardList(selectedListCard);
+  };
 
   useEffect(() => {
     const [card1, card2] = cardsSelection;
@@ -51,25 +58,47 @@ const CardList: React.FunctionComponent<CardListProps> = ({
           return curr;
         });
       });
-      setCardsSelection([]);
     }
     if (cardList && cardList.length) {
       const allPairsFound = cardList.every((objet) => objet.isFound === true);
       allPairsFound && setOpenModal(true);
     }
-  }, [cardsSelection]);
+    //Permet d'enchaîner les selections en cas de match
+    if (
+      cardsSelection.length === 2 &&
+      cardsSelection[0].cardTitle === cardsSelection[1].cardTitle
+    ) {
+      setCardsSelection([]);
+    }
 
-  useEffect(() => {
     const timeoutId: NodeJS.Timeout = setTimeout(() => {
-      if (cardsSelection.length === 2) {
+      setCardList((prev: Cards[]) => {
+        return prev.map((curr) => {
+          if (
+            curr.isSelected === true &&
+            curr.isFound !== true &&
+            cardsSelection.length === 2
+          ) {
+            return { ...curr, isSelected: false };
+          }
+          return curr;
+        });
+      });
+      //Bloque la selection pendant 1 seconde si la paire ne match pas
+      if (
+        cardsSelection.length === 2 &&
+        cardsSelection[0].cardTitle !== cardsSelection[1].cardTitle
+      ) {
         setCardsSelection([]);
       }
-    }, 2500);
-
+    }, 1000);
     return () => {
       clearTimeout(timeoutId);
     };
   }, [cardsSelection]);
+
+  console.log(cardsSelection);
+  console.log(cardList);
 
   return (
     <div className="card-list">
@@ -83,7 +112,12 @@ const CardList: React.FunctionComponent<CardListProps> = ({
           setCardsSelection={setCardsSelection}
           cardsSelection={cardsSelection}
           isFound={card.isFound}
+          isSelected={card.isSelected}
           setFirstClickOnCard={setFirstClickOnCard}
+          transitionDurationIsActive={transitionDurationIsActive}
+          setTransitionDurationIsActive={setTransitionDurationIsActive}
+          onCardClick={onCardClick}
+          currentCard={card}
         />
       ))}
     </div>

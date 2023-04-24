@@ -13,11 +13,11 @@ const Counter: React.FunctionComponent<CounterProps> = ({
   setTimerStartingValue,
   firstClickOnCard,
 }) => {
-  useEffect(() => {
-    if (timerStartingValue) {
-      setTimerStartingValue(timerStartingValue);
-    }
-  }, [timerStartingValue]);
+  // useEffect(() => {
+  //   if (timerStartingValue) {
+  //     setTimerStartingValue(timerStartingValue);
+  //   }
+  // }, [timerStartingValue]);
 
   useEffect(() => {
     //if (firstClickOnCard) {

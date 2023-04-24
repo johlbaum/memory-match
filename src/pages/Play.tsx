@@ -10,6 +10,7 @@ interface CardListProps {
   imgFront: string;
   imgBack: string;
   isFound: boolean;
+  isSelected: boolean;
 }
 
 function Play() {
@@ -18,6 +19,9 @@ function Play() {
   const [timerStartingValue, setTimerStartingValue] = useState<number>(45);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [firstClickOnCard, setFirstClickOnCard] = useState<boolean>(false);
+
+  const [transitionDurationIsActive, setTransitionDurationIsActive] =
+    useState<boolean>(true);
 
   const data = GetData(level);
 
@@ -37,9 +41,13 @@ function Play() {
     setLevel(1);
     setOpenModal(false);
     const shuffledCardList = cardList.sort(() => Math.random() - 0.5);
-    setCardList(shuffledCardList);
+    const newshuffledCardList = shuffledCardList.map((curr) => {
+      return { ...curr, isSelected: false, isFound: false };
+    });
+    setCardList(newshuffledCardList);
     const initialTimer = GetData(1).timer; // Récupère la valeur initiale du timer pour le niveau 1
     setTimerStartingValue(initialTimer);
+    setTransitionDurationIsActive(false);
   };
 
   const allPairsFound = cardList.every((objet) => objet.isFound === true);
@@ -47,17 +55,19 @@ function Play() {
   return (
     <>
       <p>Niveau : {level}</p>
-      <Counter
+      {/* <Counter
         timerStartingValue={timerStartingValue}
         setOpenModal={setOpenModal}
         setTimerStartingValue={setTimerStartingValue}
         firstClickOnCard={firstClickOnCard}
-      />
+      /> */}
       <CardList
         cardList={cardList}
         setCardList={setCardList}
         setOpenModal={setOpenModal}
         setFirstClickOnCard={setFirstClickOnCard}
+        transitionDurationIsActive={transitionDurationIsActive}
+        setTransitionDurationIsActive={setTransitionDurationIsActive}
       />
       {openModal && (
         <Modal>
