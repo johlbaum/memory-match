@@ -13,30 +13,26 @@ const Counter: React.FunctionComponent<CounterProps> = ({
   setTimerStartingValue,
   firstClickOnCard,
 }) => {
-  // useEffect(() => {
-  //   if (timerStartingValue) {
-  //     setTimerStartingValue(timerStartingValue);
-  //   }
-  // }, [timerStartingValue]);
+  console.log(firstClickOnCard);
 
   useEffect(() => {
-    //if (firstClickOnCard) {
-    const timeoutId: NodeJS.Timeout = setTimeout(() => {
-      setTimerStartingValue((prev: number) => {
-        if (prev > 1) {
-          return prev - 1;
-        } else {
-          setOpenModal(true);
-          return 0;
-        }
-      });
-    }, 1000);
+    if (firstClickOnCard) {
+      const timeoutId: NodeJS.Timeout = setTimeout(() => {
+        setTimerStartingValue((prev: number) => {
+          if (prev > 1) {
+            return prev - 1;
+          } else {
+            setOpenModal(true);
+            return 0;
+          }
+        });
+      }, 1000);
 
-    return () => {
-      clearTimeout(timeoutId);
-    };
-    //}
-  }, [timerStartingValue]);
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
+  }, [timerStartingValue, firstClickOnCard]);
 
   return <p>{timerStartingValue}</p>;
 };

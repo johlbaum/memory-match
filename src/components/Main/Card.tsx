@@ -46,6 +46,7 @@ const Card: React.FunctionComponent<CardProps> = ({
   isSelected,
 }) => {
   const handleImageClick: MouseEventHandler<HTMLDivElement> = () => {
+    setFirstClickOnCard(true);
     setTransitionDurationIsActive(true);
     onCardClick(currentCard);
     if (cardsSelection.length < 2 && isFound !== true) {

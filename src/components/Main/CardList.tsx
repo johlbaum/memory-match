@@ -18,7 +18,6 @@ interface Cards {
 interface CardListProps {
   cardList: Cards[];
   setCardList: Dispatch<SetStateAction<Cards[]>>;
-  setOpenModal: Dispatch<SetStateAction<boolean>>;
   setFirstClickOnCard: Dispatch<SetStateAction<boolean>>;
   setTransitionDurationIsActive: Dispatch<SetStateAction<boolean>>;
   transitionDurationIsActive: boolean;
@@ -27,7 +26,6 @@ interface CardListProps {
 const CardList: React.FunctionComponent<CardListProps> = ({
   cardList,
   setCardList,
-  setOpenModal,
   setFirstClickOnCard,
   transitionDurationIsActive,
   setTransitionDurationIsActive,
@@ -59,11 +57,7 @@ const CardList: React.FunctionComponent<CardListProps> = ({
         });
       });
     }
-    if (cardList && cardList.length) {
-      const allPairsFound = cardList.every((objet) => objet.isFound === true);
-      allPairsFound && setOpenModal(true);
-    }
-    //Permet d'enchaîner les selections en cas de match
+
     if (
       cardsSelection.length === 2 &&
       cardsSelection[0].cardTitle === cardsSelection[1].cardTitle
@@ -96,9 +90,6 @@ const CardList: React.FunctionComponent<CardListProps> = ({
       clearTimeout(timeoutId);
     };
   }, [cardsSelection]);
-
-  console.log(cardsSelection);
-  console.log(cardList);
 
   return (
     <div className="card-list">

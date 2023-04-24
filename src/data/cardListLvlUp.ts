@@ -86,7 +86,7 @@ const gameLevel: GameLevel[] = [
   {
     level: 1,
     numberOfCards: 3,
-    timer: 100,
+    timer: 15,
   },
   {
     level: 2,
