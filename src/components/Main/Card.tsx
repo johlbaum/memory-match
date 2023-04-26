@@ -5,7 +5,6 @@ interface CardSelection {
   id: number;
   cardTitle: string;
 }
-
 interface CurrentCard {
   id: number;
   title: string;
@@ -22,9 +21,10 @@ interface CardProps {
   isFound: boolean;
   setCardsSelection: Dispatch<SetStateAction<CardSelection[]>>;
   cardsSelection: CardSelection[];
-  setFirstClickOnCard: Dispatch<SetStateAction<boolean>>;
   transitionDurationIsActive: boolean;
-  setTransitionDurationIsActive: Dispatch<SetStateAction<boolean>>;
+  dispatchSetTransitionDuration: React.Dispatch<{
+    type: "RESET_TRANSITION_DURATION";
+  }>;
   onCardClick: (currentCard: CurrentCard) => void;
   currentCard: CurrentCard;
   isSelected: boolean;
@@ -38,16 +38,14 @@ const Card: React.FunctionComponent<CardProps> = ({
   setCardsSelection,
   imgFront,
   imgBack,
-  setFirstClickOnCard,
   transitionDurationIsActive,
-  setTransitionDurationIsActive,
+  dispatchSetTransitionDuration,
   onCardClick,
   currentCard,
   isSelected,
 }) => {
   const handleImageClick: MouseEventHandler<HTMLDivElement> = () => {
-    setFirstClickOnCard(true);
-    setTransitionDurationIsActive(true);
+    dispatchSetTransitionDuration({ type: "RESET_TRANSITION_DURATION" });
     onCardClick(currentCard);
     if (cardsSelection.length < 2 && isFound !== true) {
       const isAlreadySelected = cardsSelection.some(

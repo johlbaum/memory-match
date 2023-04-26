@@ -1,11 +1,10 @@
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
+import { useState, useEffect } from "react";
 import Card from "./Card";
 import "../../styles/cardList.css";
 interface CardSelection {
   id: number;
   cardTitle: string;
 }
-
 interface Cards {
   id: number;
   title: string;
@@ -14,21 +13,20 @@ interface Cards {
   isFound: boolean;
   isSelected: boolean;
 }
-
 interface CardListProps {
   cardList: Cards[];
-  setCardList: Dispatch<SetStateAction<Cards[]>>;
-  setFirstClickOnCard: Dispatch<SetStateAction<boolean>>;
-  setTransitionDurationIsActive: Dispatch<SetStateAction<boolean>>;
+  dispatchSetData: React.Dispatch<{ type: "SET_DATA"; payload: Cards[] }>;
+  dispatchSetTransitionDuration: React.Dispatch<{
+    type: "RESET_TRANSITION_DURATION";
+  }>;
   transitionDurationIsActive: boolean;
 }
 
 const CardList: React.FunctionComponent<CardListProps> = ({
   cardList,
-  setCardList,
-  setFirstClickOnCard,
+  dispatchSetData,
+  dispatchSetTransitionDuration,
   transitionDurationIsActive,
-  setTransitionDurationIsActive,
 }) => {
   const [cardsSelection, setCardsSelection] = useState<CardSelection[]>([]);
 
@@ -39,22 +37,28 @@ const CardList: React.FunctionComponent<CardListProps> = ({
       }
       return current;
     });
-    setCardList(selectedListCard);
+    dispatchSetData({
+      type: "SET_DATA",
+      payload: selectedListCard,
+    });
   };
 
   useEffect(() => {
     const [card1, card2] = cardsSelection;
     if (cardsSelection.length === 2 && card1.cardTitle === card2.cardTitle) {
-      setCardList((prev: Cards[]) => {
-        return prev.map((curr) => {
-          if (
-            curr.title === cardsSelection[0].cardTitle &&
-            curr.title === cardsSelection[1].cardTitle
-          ) {
-            return { ...curr, isFound: true };
-          }
-          return curr;
-        });
+      const foundListCard = cardList.map((curr) => {
+        if (
+          curr.title === cardsSelection[0].cardTitle &&
+          curr.title === cardsSelection[1].cardTitle
+        ) {
+          return { ...curr, isFound: true };
+        }
+        return curr;
+      });
+
+      dispatchSetData({
+        type: "SET_DATA",
+        payload: foundListCard,
       });
     }
 
@@ -66,18 +70,24 @@ const CardList: React.FunctionComponent<CardListProps> = ({
     }
 
     const timeoutId: NodeJS.Timeout = setTimeout(() => {
-      setCardList((prev: Cards[]) => {
-        return prev.map((curr) => {
-          if (
-            curr.isSelected === true &&
-            curr.isFound !== true &&
-            cardsSelection.length === 2
-          ) {
-            return { ...curr, isSelected: false };
-          }
-          return curr;
-        });
+      const resetSelectedCardList = cardList.map((curr) => {
+        if (
+          curr.isSelected === true &&
+          curr.isFound !== true &&
+          cardsSelection.length === 2
+        ) {
+          return { ...curr, isSelected: false };
+        }
+        return curr;
       });
+
+      if (test.length) {
+        dispatchSetData({
+          type: "SET_DATA",
+          payload: resetSelectedCardList,
+        });
+      }
+
       //Bloque la selection pendant 1 seconde si la paire ne match pas
       if (
         cardsSelection.length === 2 &&
@@ -104,9 +114,8 @@ const CardList: React.FunctionComponent<CardListProps> = ({
           cardsSelection={cardsSelection}
           isFound={card.isFound}
           isSelected={card.isSelected}
-          setFirstClickOnCard={setFirstClickOnCard}
+          dispatchSetTransitionDuration={dispatchSetTransitionDuration}
           transitionDurationIsActive={transitionDurationIsActive}
-          setTransitionDurationIsActive={setTransitionDurationIsActive}
           onCardClick={onCardClick}
           currentCard={card}
         />

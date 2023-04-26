@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useReducer, useState } from "react";
 
 import CardList from "../components/Main/CardList";
 import Counter from "../components/Main/Counter";
@@ -15,34 +15,102 @@ interface CardListProps {
 interface OpenModalContentProps {
   content: JSX.Element | null;
 }
+interface State {
+  level: number;
+  openModal: boolean;
+  firstClickOnCard: boolean;
+  cardList: CardListProps[];
+  timerStartingValue: number;
+  transitionDurationIsActive: boolean;
+}
+
+const initialState: State = {
+  level: 1,
+  openModal: false,
+  firstClickOnCard: false,
+  cardList: [],
+  timerStartingValue: 45,
+  transitionDurationIsActive: true,
+};
+
+function reducer(
+  state: State,
+  action:
+    | { type: "INCREMENT_LEVEL" }
+    | { type: "RESET_LEVEL" }
+    | { type: "SET_DATA"; payload: CardListProps[] }
+    | { type: "UPDATE_TIMER"; payload: number }
+    | { type: "RESET_TRANSITION_DURATION" }
+) {
+  switch (action.type) {
+    case "SET_DATA":
+      return {
+        ...state,
+        cardList: [...action.payload],
+      };
+    case "INCREMENT_LEVEL":
+      return {
+        ...state,
+        level: state.level + 1,
+        transitionDurationIsActive: false,
+      };
+    case "RESET_LEVEL":
+      const shuffledCardList = state.cardList.sort(() => Math.random() - 0.5);
+      const newShuffledCardList = shuffledCardList.map((currentCard) => {
+        return { ...currentCard, isSelected: false, isFound: false };
+      });
+      return {
+        ...state,
+        level: 1,
+        cardList: newShuffledCardList,
+        firstClickOnCard: false,
+        timerStartingValue: GetData(1).timer,
+        transitionDurationIsActive: false,
+      };
+    case "UPDATE_TIMER":
+      return {
+        ...state,
+        timerStartingValue: action.payload,
+      };
+    case "RESET_TRANSITION_DURATION":
+      return {
+        ...state,
+        transitionDurationIsActive: true,
+      };
+
+    default:
+      throw new Error();
+  }
+}
 
 function Play() {
-  const [level, setLevel] = useState<number>(1);
-  const [cardList, setCardList] = useState<CardListProps[]>([]);
-  const [timerStartingValue, setTimerStartingValue] = useState<number>(45);
-  const [openModal, setOpenModal] = useState<boolean>(false);
-  const [openModalContent, setOpenModalContent] =
-    useState<OpenModalContentProps>({ content: null });
-  const [firstClickOnCard, setFirstClickOnCard] = useState<boolean>(false);
-  const [transitionDurationIsActive, setTransitionDurationIsActive] =
-    useState<boolean>(true);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  const data = GetData(level);
-  const allPairsFound = cardList.every((objet) => objet.isFound === true);
+  const data = GetData(state.level);
+  const allPairsFound = state.cardList.every((objet) => objet.isFound === true);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [modalContent, setModalContent] = useState<OpenModalContentProps>({
+    content: null,
+  });
 
   useEffect(() => {
-    setCardList(data.data);
-    setTimerStartingValue(data.timer);
-  }, [level]);
+    dispatch({ type: "SET_DATA", payload: data.data });
+    dispatch({ type: "UPDATE_TIMER", payload: data.timer });
+  }, [state.level]);
 
   useEffect(() => {
     if (allPairsFound) {
       const timer = setTimeout(() => {
-        setOpenModalContent({
+        setModalContent({
           content: (
             <>
               <h2>Bravo, tu as trouvé toutes les paires !</h2>
-              <button onClick={onNextLevelButtonClick}>
+              <button
+                onClick={() => {
+                  dispatch({ type: "INCREMENT_LEVEL" });
+                  setOpenModal(false);
+                }}
+              >
                 Jouer au niveau suivant
               </button>
             </>
@@ -52,56 +120,42 @@ function Play() {
       }, 1000);
       return () => clearTimeout(timer);
     } else {
-      setOpenModalContent({
+      setModalContent({
         content: (
           <>
             <h2>Temps écoulé !</h2>
-            <button onClick={onReplayButtonClick}>Rejouer</button>
+            <button
+              onClick={() => {
+                dispatch({ type: "RESET_LEVEL" });
+                setOpenModal(false);
+              }}
+            >
+              Rejouer
+            </button>
           </>
         ),
       });
     }
-  }, [cardList]);
-
-  const onNextLevelButtonClick = () => {
-    setLevel((prevLevel) => prevLevel + 1);
-    setOpenModal(false);
-    setTransitionDurationIsActive(false);
-  };
-
-  const onReplayButtonClick = () => {
-    setLevel(1);
-    setOpenModal(false);
-    setFirstClickOnCard(false);
-    const shuffledCardList = cardList.sort(() => Math.random() - 0.5);
-    setCardList(
-      shuffledCardList.map((currentCard) => {
-        return { ...currentCard, isSelected: false, isFound: false };
-      })
-    );
-    setTimerStartingValue(GetData(1).timer);
-  };
+  }, [state.cardList]);
 
   return (
     <>
-      <p>Niveau : {level}</p>
+      <p>Niveau : {state.level}</p>
       {!allPairsFound && (
         <Counter
-          timerStartingValue={timerStartingValue}
+          timerStartingValue={state.timerStartingValue}
           setOpenModal={setOpenModal}
-          setTimerStartingValue={setTimerStartingValue}
-          firstClickOnCard={firstClickOnCard}
+          firstClickOnCard={state.firstClickOnCard}
+          dispatch={dispatch}
         />
       )}
-
       <CardList
-        cardList={cardList}
-        setCardList={setCardList}
-        setFirstClickOnCard={setFirstClickOnCard}
-        transitionDurationIsActive={transitionDurationIsActive}
-        setTransitionDurationIsActive={setTransitionDurationIsActive}
+        cardList={state.cardList}
+        dispatchSetData={dispatch}
+        dispatchSetTransitionDuration={dispatch}
+        transitionDurationIsActive={state.transitionDurationIsActive}
       />
-      {openModal && <Modal>{openModalContent.content}</Modal>}
+      {openModal && <Modal>{modalContent.content}</Modal>}
     </>
   );
 }

@@ -1,38 +1,38 @@
-import React, { useEffect, Dispatch, SetStateAction } from "react";
+import React, { useEffect } from "react";
 
 interface CounterProps {
   timerStartingValue: number;
-  setTimerStartingValue: Dispatch<SetStateAction<number>>;
-  setOpenModal: Dispatch<SetStateAction<boolean>>;
+  dispatch: React.Dispatch<{ type: "UPDATE_TIMER"; payload: number }>;
+  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
   firstClickOnCard: boolean;
 }
 
-const Counter: React.FunctionComponent<CounterProps> = ({
+const Counter: React.FC<CounterProps> = ({
   setOpenModal,
   timerStartingValue,
-  setTimerStartingValue,
+  dispatch,
   firstClickOnCard,
 }) => {
-  console.log(firstClickOnCard);
-
   useEffect(() => {
-    if (firstClickOnCard) {
-      const timeoutId: NodeJS.Timeout = setTimeout(() => {
-        setTimerStartingValue((prev: number) => {
-          if (prev > 1) {
-            return prev - 1;
-          } else {
-            setOpenModal(true);
-            return 0;
-          }
+    const timeoutId: NodeJS.Timeout = setTimeout(() => {
+      if (timerStartingValue > 1) {
+        dispatch({
+          type: "UPDATE_TIMER",
+          payload: timerStartingValue - 1,
         });
-      }, 1000);
+      } else {
+        setOpenModal(true);
+        dispatch({
+          type: "UPDATE_TIMER",
+          payload: 0,
+        });
+      }
+    }, 1000);
 
-      return () => {
-        clearTimeout(timeoutId);
-      };
-    }
-  }, [timerStartingValue, firstClickOnCard]);
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [timerStartingValue, firstClickOnCard, dispatch, setOpenModal]);
 
   return <p>{timerStartingValue}</p>;
 };
