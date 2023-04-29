@@ -14,24 +14,26 @@ const Counter: React.FC<CounterProps> = ({
   firstClickOnCard,
 }) => {
   useEffect(() => {
-    const timeoutId: NodeJS.Timeout = setTimeout(() => {
-      if (timerStartingValue > 1) {
-        dispatch({
-          type: "UPDATE_TIMER",
-          payload: timerStartingValue - 1,
-        });
-      } else {
-        setOpenModal(true);
-        dispatch({
-          type: "UPDATE_TIMER",
-          payload: 0,
-        });
-      }
-    }, 1000);
+    if (firstClickOnCard) {
+      const timeoutId: NodeJS.Timeout = setTimeout(() => {
+        if (timerStartingValue > 1) {
+          dispatch({
+            type: "UPDATE_TIMER",
+            payload: timerStartingValue - 1,
+          });
+        } else {
+          setOpenModal(true);
+          dispatch({
+            type: "UPDATE_TIMER",
+            payload: 0,
+          });
+        }
+      }, 1000);
 
-    return () => {
-      clearTimeout(timeoutId);
-    };
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
   }, [timerStartingValue, firstClickOnCard, dispatch, setOpenModal]);
 
   return <p>{timerStartingValue}</p>;

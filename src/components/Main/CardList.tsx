@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { ScoreContext } from "../../utils/context/ScoreContext";
 import Card from "./Card";
 import "../../styles/cardList.css";
 interface CardSelection {
@@ -19,6 +20,9 @@ interface CardListProps {
   dispatchSetTransitionDuration: React.Dispatch<{
     type: "RESET_TRANSITION_DURATION";
   }>;
+  dispatchSetFirstClickOnCard: React.Dispatch<{
+    type: "RESET_FIRST_CLICK_ON_CARD";
+  }>;
   transitionDurationIsActive: boolean;
 }
 
@@ -27,8 +31,10 @@ const CardList: React.FunctionComponent<CardListProps> = ({
   dispatchSetData,
   dispatchSetTransitionDuration,
   transitionDurationIsActive,
+  dispatchSetFirstClickOnCard,
 }) => {
   const [cardsSelection, setCardsSelection] = useState<CardSelection[]>([]);
+  const { setScore, score } = useContext(ScoreContext);
 
   const onCardClick = (currentCard: Cards) => {
     const selectedListCard = cardList.map((current) => {
@@ -45,12 +51,19 @@ const CardList: React.FunctionComponent<CardListProps> = ({
 
   useEffect(() => {
     const [card1, card2] = cardsSelection;
+
+    //Score update
+    if (cardsSelection.length === 2 && card1.cardTitle === card2.cardTitle) {
+      setScore([...score, 60]);
+    }
+    if (cardsSelection.length === 2 && card1.cardTitle !== card2.cardTitle) {
+      setScore([...score, -30]);
+    }
+
+    //Detect the match in the selection
     if (cardsSelection.length === 2 && card1.cardTitle === card2.cardTitle) {
       const foundListCard = cardList.map((curr) => {
-        if (
-          curr.title === cardsSelection[0].cardTitle &&
-          curr.title === cardsSelection[1].cardTitle
-        ) {
+        if (curr.title === card1.cardTitle && curr.title === card2.cardTitle) {
           return { ...curr, isFound: true };
         }
         return curr;
@@ -62,14 +75,13 @@ const CardList: React.FunctionComponent<CardListProps> = ({
       });
     }
 
-    if (
-      cardsSelection.length === 2 &&
-      cardsSelection[0].cardTitle === cardsSelection[1].cardTitle
-    ) {
+    //Directly reset the selection in case of a match
+    if (cardsSelection.length === 2 && card1.cardTitle === card2.cardTitle) {
       setCardsSelection([]);
     }
 
     const timeoutId: NodeJS.Timeout = setTimeout(() => {
+      //Only cards found can keep the "selected" value and therefore appear face up
       const resetSelectedCardList = cardList.map((curr) => {
         if (
           curr.isSelected === true &&
@@ -81,18 +93,15 @@ const CardList: React.FunctionComponent<CardListProps> = ({
         return curr;
       });
 
-      if (test.length) {
+      if (resetSelectedCardList.length) {
         dispatchSetData({
           type: "SET_DATA",
           payload: resetSelectedCardList,
         });
       }
 
-      //Bloque la selection pendant 1 seconde si la paire ne match pas
-      if (
-        cardsSelection.length === 2 &&
-        cardsSelection[0].cardTitle !== cardsSelection[1].cardTitle
-      ) {
+      //Hold the selection for one second before it resets
+      if (cardsSelection.length === 2 && card1.cardTitle !== card2.cardTitle) {
         setCardsSelection([]);
       }
     }, 1000);
@@ -114,6 +123,7 @@ const CardList: React.FunctionComponent<CardListProps> = ({
           cardsSelection={cardsSelection}
           isFound={card.isFound}
           isSelected={card.isSelected}
+          dispatchSetFirstClickOnCard={dispatchSetFirstClickOnCard}
           dispatchSetTransitionDuration={dispatchSetTransitionDuration}
           transitionDurationIsActive={transitionDurationIsActive}
           onCardClick={onCardClick}

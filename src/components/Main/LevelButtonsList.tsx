@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import LevelButton from "./LevelButton";
-import { LevelContext } from "../../utils/context/LevelContext";
+//import { LevelContext } from "../../utils/context/ScoreContext";
 
 import "../../styles/lvlButton.css";
 
@@ -25,26 +25,26 @@ const ButtonValues = [
 ];
 
 function LevelButtonsList() {
-  const [buttonValues, setButtonValues] = useState(ButtonValues);
+  //const [buttonValues, setButtonValues] = useState(ButtonValues);
 
-  const { setLevel } = useContext(LevelContext);
+  //const { setLevel } = useContext(LevelContext);
 
-  const changeBackground = (currentButton: ButtonValue): void => {
-    setLevel(currentButton.lvl);
-    setButtonValues((prevButtonValues) => {
-      return prevButtonValues.map((button) => {
-        if (button === currentButton) {
-          return { ...button, isSelected: true };
-        } else {
-          return { ...button, isSelected: false };
-        }
-      });
-    });
-  };
+  // const changeBackground = (currentButton: ButtonValue): void => {
+  //   setLevel(currentButton.lvl);
+  //   setButtonValues((prevButtonValues) => {
+  //     return prevButtonValues.map((button) => {
+  //       if (button === currentButton) {
+  //         return { ...button, isSelected: true };
+  //       } else {
+  //         return { ...button, isSelected: false };
+  //       }
+  //     });
+  //   });
+  // };
 
   return (
     <div className="lvl-buttons">
-      {buttonValues.map((currentButton) => {
+      {/* {buttonValues.map((currentButton) => {
         return (
           <LevelButton
             key={currentButton.lvl}
@@ -53,7 +53,7 @@ function LevelButtonsList() {
             level={currentButton.lvl}
           />
         );
-      })}
+      })} */}
     </div>
   );
 }

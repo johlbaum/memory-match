@@ -25,6 +25,9 @@ interface CardProps {
   dispatchSetTransitionDuration: React.Dispatch<{
     type: "RESET_TRANSITION_DURATION";
   }>;
+  dispatchSetFirstClickOnCard: React.Dispatch<{
+    type: "RESET_FIRST_CLICK_ON_CARD";
+  }>;
   onCardClick: (currentCard: CurrentCard) => void;
   currentCard: CurrentCard;
   isSelected: boolean;
@@ -40,12 +43,14 @@ const Card: React.FunctionComponent<CardProps> = ({
   imgBack,
   transitionDurationIsActive,
   dispatchSetTransitionDuration,
+  dispatchSetFirstClickOnCard,
   onCardClick,
   currentCard,
   isSelected,
 }) => {
   const handleImageClick: MouseEventHandler<HTMLDivElement> = () => {
     dispatchSetTransitionDuration({ type: "RESET_TRANSITION_DURATION" });
+    dispatchSetFirstClickOnCard({ type: "RESET_FIRST_CLICK_ON_CARD" });
     onCardClick(currentCard);
     if (cardsSelection.length < 2 && isFound !== true) {
       const isAlreadySelected = cardsSelection.some(
